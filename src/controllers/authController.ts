@@ -57,4 +57,26 @@ const handleGoogleAuth = asyncHandler(async (req: Request, res: Response) => {
     );
 });
 
-export { handleGoogleAuth };
+const handleGetUser = asyncHandler(async (req: Request, res: Response) => {
+  res
+    .status(200)
+    .json(new ApiResponse({ user: req?.user }, "User sent successfully"));
+});
+
+const handleLogout = asyncHandler(async (req: Request, res: Response) => {
+  const user = await User.findByIdAndUpdate(req?.user?._id, {
+    refreshToken: "",
+  });
+
+  if (!user) {
+    throw new ApiError(404, "No user found");
+  }
+
+  res
+    .status(200)
+    .clearCookie("accessToken", AUTH_COOKIE_OPTIONS)
+    .clearCookie("refreshToken", AUTH_COOKIE_OPTIONS)
+    .json(new ApiResponse({}, "User logged out successfully"));
+});
+
+export { handleGoogleAuth, handleGetUser, handleLogout };

@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
+import UserSchema from "../types/userSchema";
 
-const userSchema = new Schema(
+const userSchema = new Schema<UserSchema>(
   {
     email: {
       type: String,
@@ -12,6 +13,7 @@ const userSchema = new Schema(
     },
     name: {
       type: String,
+      required: true,
     },
     googleId: String,
     profilePicture: String,
