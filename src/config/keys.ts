@@ -12,8 +12,8 @@ export default {
     clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
   },
   redis: {
-    url: process.env.REDIS_URL,
-    port: process.env.REDIS_PORT,
+    host: process.env.REDIS_HOST,
+    port: process.env.REDIS_PORT || 24952,
     user: process.env.REDIS_USER,
     password: process.env.REDIS_PASSWORD,
   },

@@ -5,7 +5,7 @@ dotenv.configDotenv({
 
 import app from "./server";
 import connectDB from "./services/db";
-import { connectRedis, redisClient } from "./services/redis";
+import { redis } from "./services/redis";
 
 const PORT = process.env.PORT || 8000;
 
@@ -16,13 +16,12 @@ async function init() {
     console.error(`Error connecting to DB: ${error}`);
   }
 
-  try {
-    await connectRedis();
-    const ping = await redisClient.ping();
-    console.log("REDIS: PING", ping);
-  } catch (error) {
-    console.error(`Error connecting to Redis: ${error}`);
-  }
+  await redis.ping((err, res) => {
+    if (err) {
+      console.log(`error while connecting to redis:`, err);
+    }
+    console.log(`redis PING:${res}`);
+  });
 
   app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
