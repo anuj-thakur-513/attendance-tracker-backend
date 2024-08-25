@@ -40,7 +40,6 @@ const handleAddSubject = asyncHandler(async (req: Request, res: Response) => {
       )
     )
   );
-
   if (isDuplicateTimeTable) {
     throw new ApiError(400, "A subject with the same timetable already exists");
   }
@@ -63,6 +62,47 @@ const handleAddSubject = asyncHandler(async (req: Request, res: Response) => {
     .json(new ApiResponse(createdSubject, "subject added successfully"));
 });
 
+const handleEditSubject = asyncHandler(async (req: Request, res: Response) => {
+  const subjectId = req.params.id;
+  const { updatedSubject } = req.body;
+  const subjects = await Subject.find({ userId: req.user?._id });
+  if (!subjects.some((sub) => sub._id.toString() === subjectId)) {
+    throw new ApiError(404, "no subject found");
+  }
+
+  const isDuplicateTimeTable = subjects.some(
+    (sub) =>
+      sub.subjectTitle !== updatedSubject.name.trim().toLowerCase() &&
+      sub.timeTable.some((timeTableEntry) =>
+        updatedSubject.schedule.some(
+          (scheduleEntry: timeTable) =>
+            timeTableEntry.day === scheduleEntry.day &&
+            timeTableEntry.time === scheduleEntry.time
+        )
+      )
+  );
+  if (isDuplicateTimeTable) {
+    throw new ApiError(400, "A subject with the same timetable already exists");
+  }
+
+  const subject = await Subject.findByIdAndUpdate(
+    subjectId,
+    {
+      $set: {
+        timeTable: updatedSubject.schedule,
+      },
+    },
+    { new: true }
+  );
+  if (!subject) {
+    throw new ApiError(500, "error updating the subject");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(subject, "subject updated successfully"));
+});
+
 const handleGetAllSubjects = asyncHandler(
   async (req: Request, res: Response) => {
     const subjects = await Subject.find({ userId: req.user?._id });
@@ -78,7 +118,6 @@ const handleGetAllSubjects = asyncHandler(
 const handleDeleteSubject = asyncHandler(
   async (req: Request, res: Response) => {
     const subjectId = req.params.id;
-
     const subject = await Subject.findById(subjectId);
     if (!subject) {
       throw new ApiError(404, "no subject found");
@@ -94,4 +133,9 @@ const handleDeleteSubject = asyncHandler(
   }
 );
 
-export { handleAddSubject, handleGetAllSubjects, handleDeleteSubject };
+export {
+  handleAddSubject,
+  handleEditSubject,
+  handleGetAllSubjects,
+  handleDeleteSubject,
+};
