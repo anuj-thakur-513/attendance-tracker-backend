@@ -16,20 +16,23 @@ app.use(
 app.use(express.json({ limit: "50kb" }));
 app.use(express.urlencoded({ extended: false, limit: "50kb" }));
 app.use(morgan("dev"));
-app.use(helmet());
 app.use(cookieParser());
-
-app.use((req, res, next) => {
-  res.setHeader("Content-Security-Policy", "block-all-mixed-content");
-  next();
-});
+app.use(helmet());
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "http:", "https:"], // This allows mixed content
+      upgradeInsecureRequests: null, // This disables automatic upgrades
+    },
+  })
+);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("<h1>Welcome to Attendance-Tracker API</h1>");
-});
-
-app.get("/maintenance", (req: Request, res: Response) => {
-  res.send("<h1>Attendance-Tracker API is working fine</h1>");
 });
 
 app.use("/api/v1", v1Router);
