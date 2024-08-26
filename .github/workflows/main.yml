@@ -36,4 +36,4 @@ jobs:
             export GOOGLE_OAUTH_CLIENT_SECRET=${GOOGLE_OAUTH_CLIENT_SECRET}
             npm install
             npm run build-ts
-            sudo pm2 start dist/index.js
+            sudo pm2 reload dist/index.js
