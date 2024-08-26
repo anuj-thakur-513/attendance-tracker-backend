@@ -9,15 +9,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
-
-      - name: Deploy to EC2
+      - name: build-and-restart
+        uses: appleboy/ssh-action@master
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
@@ -25,10 +18,13 @@ jobs:
           REFRESH_TOKEN_EXPIRY: ${{ secrets.REFRESH_TOKEN_EXPIRY }}
           GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
           GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
-        run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@13.201.50.77 << EOF
+        with:
+          key: ${{ secrets.EC2_SSH_KEY }}
+          host: "13.201.50.77"
+          username: "ubuntu"
+          script: |
             cd backend
-            git pull origin main
+            git pull git@github.com:anuj-thakur-513/attendance-tracker-backend.git main
             export MONGO_URI=${MONGO_URI}
             export JWT_SECRET=${JWT_SECRET}
             export ACCESS_TOKEN_EXPIRY=${ACCESS_TOKEN_EXPIRY}
@@ -37,5 +33,4 @@ jobs:
             export GOOGLE_OAUTH_CLIENT_SECRET=${GOOGLE_OAUTH_CLIENT_SECRET}
             npm install
             npm run build-ts
-            sudo pm2 reload dist/index.js
-          EOF
+            sudo pm2 reload backend
