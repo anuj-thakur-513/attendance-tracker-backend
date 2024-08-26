@@ -49,8 +49,6 @@ const handleGoogleAuth = asyncHandler(async (req: Request, res: Response) => {
     refreshToken: refreshToken,
   };
 
-  console.log(responseObject);
-
   res
     .status(200)
     .json(new ApiResponse(responseObject, "User logged in successfully"));
