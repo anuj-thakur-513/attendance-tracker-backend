@@ -14,12 +14,6 @@ jobs:
         env:
           GH_USER: ${{ secrets.GH_USER }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          MONGO_URI: ${{ secrets.MONGO_URI }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          ACCESS_TOKEN_EXPIRY: ${{ secrets.ACCESS_TOKEN_EXPIRY }}
-          REFRESH_TOKEN_EXPIRY: ${{ secrets.REFRESH_TOKEN_EXPIRY }}
-          GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
-          GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
         with:
           key: ${{ secrets.EC2_SSH_KEY }}
           host: "13.201.50.77"
@@ -28,12 +22,6 @@ jobs:
           script: |
             cd backend/attendance-tracker-backend
             git pull https://${GH_USER}:${GH_TOKEN}@github.com/anuj-thakur-513/attendance-tracker-backend.git
-            export MONGO_URI=${MONGO_URI}
-            export JWT_SECRET=${JWT_SECRET}
-            export ACCESS_TOKEN_EXPIRY=${ACCESS_TOKEN_EXPIRY}
-            export REFRESH_TOKEN_EXPIRY=${REFRESH_TOKEN_EXPIRY}
-            export GOOGLE_OAUTH_CLIENT_ID=${GOOGLE_OAUTH_CLIENT_ID}
-            export GOOGLE_OAUTH_CLIENT_SECRET=${GOOGLE_OAUTH_CLIENT_SECRET}
             npm install
             npm run build-ts
             sudo pm2 reload dist/index.js
