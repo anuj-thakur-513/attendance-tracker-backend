@@ -24,9 +24,9 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           host: "13.201.50.77"
           username: "ubuntu"
-          envs: GH_USER, GH_TOKEN
+          envs: GH_USER,GH_TOKEN
           script: |
-            cd backend
+            cd backend/attendance-tracker-backend
             git clone git@github.com:anuj-thakur-513/attendance-tracker-backend.git
             export MONGO_URI=${MONGO_URI}
             export JWT_SECRET=${JWT_SECRET}
