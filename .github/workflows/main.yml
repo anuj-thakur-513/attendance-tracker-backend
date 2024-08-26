@@ -27,7 +27,7 @@ jobs:
           envs: GH_USER,GH_TOKEN
           script: |
             cd backend/attendance-tracker-backend
-            git clone git@github.com:anuj-thakur-513/attendance-tracker-backend.git
+            git pull https://${GH_USER}:${GH_TOKEN}@github.com/anuj-thakur-513/attendance-tracker-backend.git
             export MONGO_URI=${MONGO_URI}
             export JWT_SECRET=${JWT_SECRET}
             export ACCESS_TOKEN_EXPIRY=${ACCESS_TOKEN_EXPIRY}
