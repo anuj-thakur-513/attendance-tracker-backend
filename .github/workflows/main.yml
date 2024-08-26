@@ -27,7 +27,7 @@ jobs:
           envs: GH_USER, GH_TOKEN
           script: |
             cd backend
-            git pull git@github.com:anuj-thakur-513/attendance-tracker-backend.git main
+            git clone git@github.com:anuj-thakur-513/attendance-tracker-backend.git
             export MONGO_URI=${MONGO_URI}
             export JWT_SECRET=${JWT_SECRET}
             export ACCESS_TOKEN_EXPIRY=${ACCESS_TOKEN_EXPIRY}
@@ -36,4 +36,4 @@ jobs:
             export GOOGLE_OAUTH_CLIENT_SECRET=${GOOGLE_OAUTH_CLIENT_SECRET}
             npm install
             npm run build-ts
-            sudo pm2 reload backend
+            sudo pm2 start backend
