@@ -41,20 +41,18 @@ const handleGoogleAuth = asyncHandler(async (req: Request, res: Response) => {
     { new: true }
   );
 
-  res
-    .status(200)
-    .cookie("accessToken", accessToken, AUTH_COOKIE_OPTIONS)
-    .cookie("refreshToken", refreshToken, AUTH_COOKIE_OPTIONS)
-    .json(
-      new ApiResponse(
-        {
-          name: user?.name,
-          email: user?.email,
-          profilePicture: user?.profilePicture,
-        },
-        "User logged in successfully"
-      )
-    );
+  res.status(200).json(
+    new ApiResponse(
+      {
+        name: user?.name,
+        email: user?.email,
+        profilePicture: user?.profilePicture,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      },
+      "User logged in successfully"
+    )
+  );
 });
 
 const handleGetUser = asyncHandler(async (req: Request, res: Response) => {
