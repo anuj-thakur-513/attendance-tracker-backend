@@ -24,7 +24,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           host: "13.201.50.77"
           username: "ubuntu"
-          envs: GH_USER,GH_TOKEN
+          envs: GH_USER,GH_TOKEN,MONGO_URI,JWT_SECRET,ACCESS_TOKEN_EXPIRY,REFRESH_TOKEN_EXPIRY,GOOGLE_OAUTH_CLIENT_ID,GOOGLE_OAUTH_CLIENT_SECRET
           script: |
             cd backend/attendance-tracker-backend
             git pull https://${GH_USER}:${GH_TOKEN}@github.com/anuj-thakur-513/attendance-tracker-backend.git main
