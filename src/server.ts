@@ -28,8 +28,7 @@ app.use(
       scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", "http:", "https:"], // This allows mixed content
-      upgradeInsecureRequests: null, // This disables automatic upgrades
+      connectSrc: ["'self'", "https:"], // This allows mixed content
     },
   })
 );
