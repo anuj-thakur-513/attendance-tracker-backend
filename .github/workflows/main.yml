@@ -2,7 +2,8 @@ name: Attendance Tracker Backend PROD
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   deploy:
@@ -14,18 +15,18 @@ jobs:
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{secrets.EC2_SSH_KEY}}
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
       - name: Deploy to EC2
         env:
-          MONGO_URI: ${{secrets.MONGO_URI}}
-          JWT_SECRET: ${{secrets.JWT_SECRET}}
-          ACCESS_TOKEN_EXPIRY: ${{secrets.ACCESS_TOKEN_EXPIRY}}
-          REFRESH_TOKEN_EXPIRY: ${{secrets.REFRESH_TOKEN_EXPIRY}}
-          GOOGLE_OAUTH_CLIENT_ID: ${{secrets.GOOGLE_OAUTH_CLIENT_ID}}
-          GOOGLE_OAUTH_CLIENT_SECRET: ${{secrets.GOOGLE_OAUTH_CLIENT_SECRET}}
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          ACCESS_TOKEN_EXPIRY: ${{ secrets.ACCESS_TOKEN_EXPIRY }}
+          REFRESH_TOKEN_EXPIRY: ${{ secrets.REFRESH_TOKEN_EXPIRY }}
+          GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+          GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
         run: |
-          ssh -o StrictHostKeyChecking=no ec2-user@13.201.50.77 << 'EOF'
+          ssh -o StrictHostKeyChecking=no ec2-user@13.201.50.77 << EOF
             cd backend
             git pull origin main
             export MONGO_URI=${MONGO_URI}
