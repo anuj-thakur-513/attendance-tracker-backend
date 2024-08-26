@@ -41,18 +41,19 @@ const handleGoogleAuth = asyncHandler(async (req: Request, res: Response) => {
     { new: true }
   );
 
-  res.status(200).json(
-    new ApiResponse(
-      {
-        name: user?.name,
-        email: user?.email,
-        profilePicture: user?.profilePicture,
-        accessToken: accessToken,
-        refreshToken: refreshToken,
-      },
-      "User logged in successfully"
-    )
-  );
+  const responseObject = {
+    name: user?.name,
+    email: user?.email,
+    profilePicture: user?.profilePicture,
+    accessToken: accessToken,
+    refreshToken: refreshToken,
+  };
+
+  console.log(responseObject);
+
+  res
+    .status(200)
+    .json(new ApiResponse(responseObject, "User logged in successfully"));
 });
 
 const handleGetUser = asyncHandler(async (req: Request, res: Response) => {
@@ -70,11 +71,7 @@ const handleLogout = asyncHandler(async (req: Request, res: Response) => {
     throw new ApiError(404, "No user found");
   }
 
-  res
-    .status(200)
-    .clearCookie("accessToken", AUTH_COOKIE_OPTIONS)
-    .clearCookie("refreshToken", AUTH_COOKIE_OPTIONS)
-    .json(new ApiResponse({}, "User logged out successfully"));
+  res.status(200).json(new ApiResponse({}, "User logged out successfully"));
 });
 
 export { handleGoogleAuth, handleGetUser, handleLogout };
