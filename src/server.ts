@@ -19,6 +19,11 @@ app.use(morgan("dev"));
 app.use(helmet());
 app.use(cookieParser());
 
+app.use((req, res, next) => {
+  res.setHeader("Content-Security-Policy", "block-all-mixed-content");
+  next();
+});
+
 app.get("/", (req: Request, res: Response) => {
   res.send("<h1>Welcome to Attendance-Tracker API</h1>");
 });
