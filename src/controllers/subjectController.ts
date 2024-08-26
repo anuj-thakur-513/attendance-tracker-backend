@@ -4,6 +4,7 @@ import ApiError from "../core/ApiError";
 import { Subject } from "../models/Subject";
 import ApiResponse from "../core/ApiResponse";
 import { timeTable } from "../types/timeTable";
+import { Attendance } from "../models/Attendance";
 
 const handleAddSubject = asyncHandler(async (req: Request, res: Response) => {
   const { subject } = req.body;
@@ -125,6 +126,10 @@ const handleDeleteSubject = asyncHandler(
 
     try {
       await Subject.deleteOne({ _id: subjectId });
+      await Attendance.deleteOne({
+        userId: req.user?._id,
+        subjectId: subjectId,
+      });
     } catch (error) {
       throw new ApiError(500, "error deleting the subject");
     }
