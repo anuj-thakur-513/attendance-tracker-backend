@@ -18,6 +18,10 @@ app.get("/", (req: Request, res: Response) => {
   res.send("<h1>Welcome to Attendance-Tracker API</h1>");
 });
 
+app.get("/maintenance", (req: Request, res: Response) => {
+  res.send("<h1>Attendance-Tracker API is working fine</h1>");
+});
+
 app.use("/api/v1", v1Router);
 
 export default app;
