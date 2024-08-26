@@ -4,6 +4,10 @@ import ApiError from "../core/ApiError";
 import { Attendance } from "../models/Attendance";
 import ApiResponse from "../core/ApiResponse";
 import { Subject } from "../models/Subject";
+import {
+  calculateLecturesCanSkip,
+  calculateLecturesNeeded,
+} from "../utils/additionalClassesRequired";
 
 const handleAddAttendance = asyncHandler(
   async (req: Request, res: Response) => {
@@ -116,4 +120,50 @@ const handleGetAttendance = asyncHandler(
   }
 );
 
-export { handleAddAttendance, handleGetAttendance };
+const handleGetDetailedAttendance = asyncHandler(
+  async (req: Request, res: Response) => {
+    const user = req.user;
+
+    const attendance = await Attendance.find({ userId: user?._id })
+      .populate({
+        path: "subjectId",
+        select: "subjectTitle",
+      })
+      .select("subjectId totalLectures totalLecturesAttended -_id");
+
+    const finalData = attendance.map((item) => {
+      return {
+        subjectId: item.subjectId,
+        totalLectures: item.totalLectures,
+        totalLecturesAttended: item.totalLecturesAttended,
+        attendancePercentage: (
+          ((item.totalLecturesAttended as number) /
+            (item.totalLectures as number)) *
+          100
+        ).toFixed(1),
+        lecturesRequiredForNecessaryAttendance: calculateLecturesNeeded(
+          item.totalLectures as number,
+          item.totalLecturesAttended as number,
+          75
+        ),
+        lecturesCanBeSkipped: calculateLecturesCanSkip(
+          item.totalLectures as number,
+          item.totalLecturesAttended as number,
+          75
+        ),
+      };
+    });
+
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(finalData, "detailed attendance sent successfully")
+      );
+  }
+);
+
+export {
+  handleAddAttendance,
+  handleGetAttendance,
+  handleGetDetailedAttendance,
+};
