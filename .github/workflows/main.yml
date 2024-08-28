@@ -26,6 +26,7 @@ jobs:
           username: "ubuntu"
           envs: GH_USER,GH_TOKEN,MONGO_URI,JWT_SECRET,ACCESS_TOKEN_EXPIRY,REFRESH_TOKEN_EXPIRY,GOOGLE_OAUTH_CLIENT_ID,GOOGLE_OAUTH_CLIENT_SECRET
           script: |
+            cd backend
             git clone https://${GH_USER}:${GH_TOKEN}@github.com/anuj-thakur-513/attendance-tracker-backend.git
             npm install
             npm run build-ts
