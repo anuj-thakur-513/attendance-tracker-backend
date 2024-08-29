@@ -13,8 +13,6 @@ const authMiddleware = asyncHandler(
       req?.cookies?.accessToken ||
       req.header("Access-Token")?.replace("Bearer", "");
 
-    console.log(req.cookies);
-
     if (!token) {
       throw new ApiError(401, "No access token found");
     }
