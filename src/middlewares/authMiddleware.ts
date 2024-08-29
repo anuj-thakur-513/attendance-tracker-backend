@@ -11,7 +11,7 @@ const authMiddleware = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const token: string =
       req?.cookies?.accessToken ||
-      req.header("Authorization")?.replace("Bearer", "");
+      req.header("Access-Token")?.replace("Bearer", "");
 
     console.log(req.cookies);
 
@@ -38,7 +38,7 @@ const authMiddleware = asyncHandler(
       if (error.name === "TokenExpiredError" || error.statusCode === 401) {
         const token: string =
           req.cookies?.refreshToken ||
-          req.header("Authorization")?.replace("Bearer ", "");
+          req.header("Refresh-Token")?.replace("Bearer ", "");
         if (!token) {
           throw new ApiError(401, "Unauthorized Request");
         }
